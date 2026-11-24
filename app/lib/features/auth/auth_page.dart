@@ -26,6 +26,7 @@ class _AuthPageState extends State<AuthPage> {
   bool _obscure = true;
   bool _consent = false;
   String? _error;
+  String? _notice;
 
   @override
   void dispose() {
@@ -54,6 +55,7 @@ class _AuthPageState extends State<AuthPage> {
     setState(() {
       _busy = true;
       _error = null;
+      _notice = null;
     });
     final backend = context.sessionRead.backend;
     try {
@@ -70,6 +72,8 @@ class _AuthPageState extends State<AuthPage> {
         );
       }
       if (mounted) context.go(_afterAuth);
+    } on AuthNotice catch (n) {
+      setState(() => _notice = n.message);
     } on AuthFailure catch (e) {
       setState(() => _error = e.message);
     } catch (e) {
@@ -243,6 +247,31 @@ class _AuthPageState extends State<AuthPage> {
                     child: TextButton(
                       onPressed: _reset,
                       child: const Text('Şifremi unuttum'),
+                    ),
+                  ),
+                if (_notice != null)
+                  Container(
+                    margin: const EdgeInsets.only(top: 12),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: Brand.limonSoft,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.mark_email_read_outlined,
+                          color: Brand.kobalt,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            _notice!,
+                            style: BrandText.body(size: 15),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 if (_error != null)
