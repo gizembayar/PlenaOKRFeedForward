@@ -69,6 +69,14 @@ abstract class Backend {
   Future<void> refreshMembership();
 }
 
+/// Hata değil, kullanıcıya gösterilecek olumlu bilgi (ör. "e-postanı kontrol et").
+class AuthNotice implements Exception {
+  AuthNotice(this.message);
+  final String message;
+  @override
+  String toString() => message;
+}
+
 class AuthFailure implements Exception {
   AuthFailure(this.message);
   final String message;
@@ -181,8 +189,9 @@ class SupabaseBackend implements Backend {
       emailRedirectTo: '${AppConfig.siteUrl}/app/bugun',
     );
     if (res.session == null) {
-      throw AuthFailure(
-        'Hesabın oluşturuldu. Onay bağlantısı için e-postanı kontrol et.',
+      throw AuthNotice(
+        'Hesabın oluşturuldu! Onay bağlantısı için e-postanı kontrol et; '
+        'bağlantıya tıkladıktan sonra giriş yapabilirsin.',
       );
     }
     await _load();
