@@ -93,6 +93,27 @@ Web, `#` olmayan yollar kullanır (`/uyelik`). Hosting'de tüm yolları `index.h
             → stripe-webhook → profiles.tier = 'cool' → uygulama üyeliği tazeler
 ```
 
+## Yayın: notdulbutcool.com (GitHub Pages + GoDaddy)
+
+`main` dalına her push'ta `.github/workflows/deploy-web.yml` siteyi derleyip GitHub Pages'e yayınlar. `app/web/CNAME` alan adını tanımlar.
+
+**1. GitHub (bir kez):** Repo → Settings → Pages → *Source: GitHub Actions*. Ardından *Custom domain* = `notdulbutcool.com`, DNS doğrulanınca **Enforce HTTPS** işaretlenir.
+Supabase hazır olduğunda Settings → Secrets and variables → Actions → **Variables**: `SUPABASE_URL`, `SUPABASE_ANON_KEY`.
+
+**2. GoDaddy → Domain → DNS → DNS Records:**
+
+| Tür | Ad | Değer | TTL |
+|-----|----|-------|-----|
+| A | @ | 185.199.108.153 | 1 saat |
+| A | @ | 185.199.109.153 | 1 saat |
+| A | @ | 185.199.110.153 | 1 saat |
+| A | @ | 185.199.111.153 | 1 saat |
+| CNAME | www | gizembayar.github.io | 1 saat |
+
+GoDaddy'nin varsayılan `A @ → Parked` kaydını ve varsa *Forwarding* ayarını silin. DNS yayılımı birkaç dakika ile 48 saat sürebilir.
+
+**3. Supabase / Stripe:** Supabase Auth Site URL ve Edge Functions `SITE_URL` = `https://notdulbutcool.com`.
+
 ## ⚠️ Mağaza kuralları (önemli)
 
 **Apple App Store**, uygulama içinde tüketilen dijital içeriğin (video eğitim, meditasyon, PDF) **Stripe gibi harici ödemeyle satılmasına** genel olarak izin vermez; In-App Purchase ister. Bu yüzden `HIDE_PURCHASE_ON_IOS=true` (varsayılan) iken iOS uygulamasında satın alma butonları gizlenir ve kullanıcı web'de aldığı üyelikle giriş yapar (“reader app” yaklaşımı). Google Play'de de benzer kurallar vardır. Fiziksel hizmetler (buluşma, tatil) bu kuralın dışındadır. Mobil mağazalarda abonelik satışı istenirse RevenueCat/StoreKit entegrasyonu ayrı bir adım olarak eklenmelidir.
