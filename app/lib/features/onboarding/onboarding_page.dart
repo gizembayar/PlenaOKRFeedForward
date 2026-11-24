@@ -139,10 +139,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         child: Text(
                           'Senden tam ad, eski eş bilgisi ya da boşanma hikâyesi istemiyoruz. '
                           'Bilgiler yalnızca sana öneri sunmak için kullanılır.',
-                          style: BrandText.body(
-                            size: 12,
-                            color: Colors.black54,
-                          ),
+                          style: BrandText.body(size: 12, color: Brand.metin2),
                         ),
                       ),
                     FilledButton(

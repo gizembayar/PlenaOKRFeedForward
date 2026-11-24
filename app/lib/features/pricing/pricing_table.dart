@@ -100,7 +100,7 @@ class _PricingTableState extends State<PricingTable> {
             padding: const EdgeInsets.only(top: 8),
             child: Text(
               'Üyeliğini notdulbutcool.com üzerinden başlatıp yönetebilirsin.',
-              style: BrandText.body(size: 13, color: Colors.black54),
+              style: BrandText.body(size: 13, color: Brand.metin2),
             ),
           ),
       ],

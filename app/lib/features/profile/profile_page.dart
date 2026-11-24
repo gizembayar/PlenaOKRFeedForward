@@ -90,7 +90,7 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 '${s.life.city} • ${s.life.time.join(', ')}',
-                style: BrandText.body(size: 13, color: Colors.black54),
+                style: BrandText.body(size: 13, color: Brand.metin2),
               ),
               const SizedBox(height: 8),
               Text(
@@ -139,7 +139,7 @@ class ProfilePage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 16),
             child: Text(
               'Demo mod aktif — ödemeler simüle ediliyor.',
-              style: BrandText.body(size: 12, color: Colors.black45),
+              style: BrandText.body(size: 12, color: Brand.metin2),
             ),
           ),
       ],

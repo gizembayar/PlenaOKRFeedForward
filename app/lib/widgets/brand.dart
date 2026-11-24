@@ -190,54 +190,98 @@ class ContentTile extends StatelessWidget {
     final s = context.session;
     final locked = !s.canAccess(item);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: CoolCard(
-        color: Brand.beyaz,
-        padding: const EdgeInsets.all(12),
-        onTap: () => context.push('/app/icerik/${item.id}'),
-        child: Row(
-          children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                color: swatch(item),
-                borderRadius: BorderRadius.circular(12),
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: Brand.golge,
+        ),
+        child: CoolCard(
+          color: Brand.beyaz,
+          border: false,
+          padding: const EdgeInsets.all(14),
+          onTap: () => context.push('/app/icerik/${item.id}'),
+          child: Row(
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  color: swatch(item),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      right: -10,
+                      bottom: -10,
+                      child: Container(
+                        width: 34,
+                        height: 34,
+                        decoration: BoxDecoration(
+                          color: Brand.beyaz.withValues(alpha: 0.45),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Icon(
+                        item.kind.icon,
+                        color: Brand.kobalt,
+                        size: 28,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              child: Icon(item.kind.icon, color: Brand.kobalt),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.title,
-                    style: BrandText.body(size: 15)
-                        .copyWith(fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    showArea
-                        ? '${item.area.title} • ${item.meta}'
-                        : item.subtitle,
-                    style: BrandText.body(size: 13, color: Colors.black54),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.title,
+                      style: BrandText.heading(
+                        size: 17,
+                        color: Brand.siyah,
+                      ).copyWith(letterSpacing: -0.2),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      showArea
+                          ? '${item.area.title} • ${item.meta}'
+                          : item.subtitle,
+                      style: BrandText.body(size: 14, color: Brand.metin2),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            if (locked)
-              TierBadge(
-                item.requiredTier == Tier.icon ? Tier.icon : Tier.cool,
-                small: true,
-              )
-            else if (s.isDone(item.id))
-              const Icon(Icons.check_circle, color: Brand.kobalt)
-            else
-              const Icon(Icons.chevron_right, color: Brand.kobalt),
-          ],
+              const SizedBox(width: 8),
+              if (locked)
+                TierBadge(
+                  item.requiredTier == Tier.icon ? Tier.icon : Tier.cool,
+                  small: true,
+                )
+              else if (s.isDone(item.id))
+                const Icon(Icons.check_circle, color: Brand.kobalt, size: 28)
+              else
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: const BoxDecoration(
+                    color: Brand.krem,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.arrow_forward,
+                    color: Brand.kobalt,
+                    size: 20,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -294,6 +338,121 @@ class Bullet extends StatelessWidget {
           child: Text(text, style: BrandText.body(size: 14, color: textColor)),
         ),
       ],
+    ),
+  );
+}
+
+/// Kayan slogan şeridi — markanın muzip sesi.
+class SloganMarquee extends StatefulWidget {
+  const SloganMarquee({
+    super.key,
+    required this.items,
+    this.background = Brand.limon,
+    this.foreground = Brand.kobalt,
+  });
+  final List<String> items;
+  final Color background;
+  final Color foreground;
+
+  @override
+  State<SloganMarquee> createState() => _SloganMarqueeState();
+}
+
+class _SloganMarqueeState extends State<SloganMarquee>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 40),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final row = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final t in widget.items) ...[
+          Text(t, style: BrandText.logo(size: 26, color: widget.foreground)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 22),
+            child: Icon(Icons.circle, size: 10, color: widget.foreground),
+          ),
+        ],
+      ],
+    );
+    final reduceMotion = MediaQuery.of(context).disableAnimations;
+    return Container(
+      color: widget.background,
+      height: 68,
+      child: ClipRect(
+        child: LayoutBuilder(
+          builder: (context, c) => OverflowBox(
+            alignment: Alignment.centerLeft,
+            maxWidth: double.infinity,
+            child: reduceMotion
+                ? row
+                : AnimatedBuilder(
+                    animation: _c,
+                    builder: (context, child) => FractionalTranslation(
+                      translation: Offset(-_c.value / 2, 0),
+                      child: child,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [row, row],
+                    ),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Dekoratif daire (kapak sayfasındaki limon ve mercan daireler).
+class Dot extends StatelessWidget {
+  const Dot(this.size, this.color, {super.key});
+  final double size;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+  );
+}
+
+/// Eğik "etiket" — muzip vurgu.
+class Sticker extends StatelessWidget {
+  const Sticker(
+    this.text, {
+    super.key,
+    this.color = Brand.mercan,
+    this.textColor = Brand.beyaz,
+    this.angle = -0.06,
+  });
+  final String text;
+  final Color color;
+  final Color textColor;
+  final double angle;
+
+  @override
+  Widget build(BuildContext context) => Transform.rotate(
+    angle: angle,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(6),
+        boxShadow: Brand.golge,
+      ),
+      child: Text(text, style: BrandText.label(color: textColor, size: 13)),
     ),
   );
 }

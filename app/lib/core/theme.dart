@@ -16,6 +16,14 @@ abstract final class Brand {
   static const kartZemin = Color(0xFFFBF9F3);
   static const cizgi = Color(0xFFE2DCCB);
 
+  /// İkincil metin: krem zemin üzerinde ~7:1 kontrast (35+ yaş için okunaklı).
+  static const metin2 = Color(0xFF57524A);
+
+  /// Yumuşak, sıcak gölge — kartlara derinlik verir.
+  static const golge = [
+    BoxShadow(color: Color(0x14202020), blurRadius: 24, offset: Offset(0, 8)),
+  ];
+
   static const slogan = 'Hayatımda koca bir değişiklik var.';
   static const name = 'NOT DUL, BUT COOL.';
 }
@@ -51,11 +59,11 @@ abstract final class BrandText {
         color: color,
       );
 
-  static TextStyle body({Color color = Brand.siyah, double size = 15}) =>
+  static TextStyle body({Color color = Brand.siyah, double size = 16}) =>
       TextStyle(
         fontFamily: 'Inter',
         fontSize: size,
-        height: 1.45,
+        height: 1.55,
         color: color,
       );
 
@@ -104,12 +112,12 @@ ThemeData buildTheme() {
       style: FilledButton.styleFrom(
         backgroundColor: Brand.kobalt,
         foregroundColor: Brand.krem,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
         shape: const StadiumBorder(),
         textStyle: TextStyle(
           fontFamily: 'Inter',
           fontWeight: FontWeight.w700,
-          fontSize: 15,
+          fontSize: 16,
         ),
       ),
     ),
@@ -117,17 +125,28 @@ ThemeData buildTheme() {
       style: OutlinedButton.styleFrom(
         foregroundColor: Brand.kobalt,
         side: const BorderSide(color: Brand.kobalt, width: 1.5),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
         shape: const StadiumBorder(),
         textStyle: TextStyle(
           fontFamily: 'Inter',
           fontWeight: FontWeight.w700,
-          fontSize: 15,
+          fontSize: 16,
         ),
       ),
     ),
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Brand.kobalt,
+      contentTextStyle: const TextStyle(
+        fontFamily: 'Inter',
+        color: Brand.krem,
+        fontSize: 15,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
       fillColor: Brand.beyaz,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
@@ -150,11 +169,13 @@ ThemeData buildTheme() {
       labelStyle: TextStyle(
         fontFamily: 'Inter',
         fontWeight: FontWeight.w600,
-        fontSize: 13,
+        fontSize: 14,
       ),
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: Brand.beyaz,
+      height: 72,
+      surfaceTintColor: Colors.transparent,
       indicatorColor: Brand.limon,
       labelTextStyle: WidgetStatePropertyAll(
         TextStyle(

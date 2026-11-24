@@ -95,8 +95,10 @@ class AppPage extends StatelessWidget {
     this.subtitle,
     required this.children,
     this.actions,
+    this.eyebrow,
   });
 
+  final String? eyebrow;
   final String title;
   final String? subtitle;
   final List<Widget> children;
@@ -108,38 +110,77 @@ class AppPage extends StatelessWidget {
       slivers: [
         SliverToBoxAdapter(
           child: Container(
-            color: Brand.kobalt,
-            padding: EdgeInsets.fromLTRB(
-              0,
-              MediaQuery.paddingOf(context).top + 20,
-              0,
-              24,
+            clipBehavior: Clip.hardEdge,
+            decoration: const BoxDecoration(
+              color: Brand.kobalt,
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
             ),
-            child: MaxWidth(
-              width: 860,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
+              children: [
+                const Positioned(
+                  right: -40,
+                  top: -50,
+                  child: Dot(170, Brand.limon),
+                ),
+                const Positioned(
+                  right: 70,
+                  bottom: -46,
+                  child: Dot(92, Brand.mercan),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    0,
+                    MediaQuery.paddingOf(context).top + 28,
+                    0,
+                    32,
+                  ),
+                  child: MaxWidth(
+                    width: 860,
+                    child: Row(
                       children: [
-                        Text(
-                          title,
-                          style: BrandText.logo(size: 28, color: Brand.krem),
-                        ),
-                        if (subtitle != null) ...[
-                          const SizedBox(height: 6),
-                          Text(
-                            subtitle!,
-                            style: BrandText.body(color: Brand.krem, size: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (eyebrow != null) ...[
+                                Text(
+                                  eyebrow!.trUpper,
+                                  style: BrandText.label(
+                                    color: Brand.limon,
+                                    size: 12,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                              ],
+                              Text(
+                                title,
+                                style: BrandText.logo(
+                                  size: 32,
+                                  color: Brand.krem,
+                                ),
+                              ),
+                              if (subtitle != null) ...[
+                                const SizedBox(height: 8),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 90),
+                                  child: Text(
+                                    subtitle!,
+                                    style: BrandText.body(
+                                      color: Brand.krem,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
-                        ],
+                        ),
+                        ...?actions,
                       ],
                     ),
                   ),
-                  ...?actions,
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
